@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from "react";
 import LottieView from "lottie-react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import { router } from "expo-router";
-const results = () => {
+const getStarted = () => {
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const results = () => {
   );
 };
 
-export default results;
+export default getStarted;
 
 const styles = StyleSheet.create({
   safeArea: {

@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import PagerView from "react-native-pager-view";
 import Guide from "./CarouselComponents/guide";
 import Guidelines from "./CarouselComponents/guidelines";
-import Results from "./CarouselComponents/results";
+import GetStarted from "./CarouselComponents/getStarted";
 import Swiper from "react-native-swiper";
 
 const Carosel = () => {
@@ -18,7 +18,7 @@ const Carosel = () => {
           <Guidelines />
         </View>
         <View style={styles.container}>
-          <Results />
+          <GetStarted />
         </View>
       </Swiper>
     </SafeAreaView>

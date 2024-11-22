@@ -1,4 +1,12 @@
-import { Button, StyleSheet, Text, View, Image, Pressable } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
@@ -9,10 +17,13 @@ import { router } from "expo-router";
 import { useCameraPermissions } from "expo-image-picker";
 import Toast from "react-native-toast-message";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ionicons from "@expo/vector-icons/Ionicons";
 const Images = () => {
   const [images, setImages] = useState<string[]>(["", "", "", "", ""]);
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
+  const [loading, setLoading] = useState(false);
+  const YOUR_URL = process.env.EXPO_PUBLIC_REACT_URL;
 
   const suggestions = [
     "Try the next one with different lighting",
@@ -22,6 +33,14 @@ const Images = () => {
     "Looks great!",
   ];
 
+  // if (loading) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" color="#0000ff" />
+  //       <Text style={{ fontSize: 20, marginTop: 15 }}>Uploading Images...</Text>
+  //     </View>
+  //   );
+  // }
   const pickImage = async (index: number) => {
     if (!permission?.granted) {
       const { granted } = await requestPermission();
@@ -42,20 +61,20 @@ const Images = () => {
       const newImages = [...images];
       newImages[index] = result.assets[0].uri;
       setImages(newImages);
+      Toast.show({
+        type: "info",
+        text1: "Photo Added",
+        text1Style: { fontSize: 15, color: "gray" },
+        text2: suggestions[index],
+        text2Style: { fontWeight: "bold", fontSize: 13, color: "#000" },
+        position: "bottom",
+      });
     }
-
-    Toast.show({
-      type: "info",
-      text1: "Photo Added",
-      text1Style: { fontSize: 15, color: "gray" }, // Customize font weight and color for text2
-      text2: suggestions[index],
-      text2Style: { fontWeight: "bold", fontSize: 13, color: "#000" }, // Customize font weight and color for text2
-      position: "bottom",
-    });
   };
 
-  const addImages = async () => {
+  const uploadImages = async () => {
     try {
+      setLoading(true);
       const formData = new FormData();
 
       const imagePromises = images.map(async (uri) => {
@@ -70,17 +89,20 @@ const Images = () => {
 
       await Promise.all(imagePromises);
 
-      const response = await fetch("http://192.168.137.245:3000/query/images", {
+      const data = await fetch(`http://${YOUR_URL}:3000`, {
         method: "POST",
         body: formData,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        return true;
+      const response = await data.json();
+      console.log(response);
+      if (response.status === "success") {
+        await AsyncStorage.setItem("data", JSON.stringify(response));
       }
     } catch (error) {
       console.error("Error uploading image:", error);
+    } finally {
+      router.push("/graph");
     }
   };
 
@@ -100,12 +122,11 @@ const Images = () => {
   async function handleNext() {
     const uploadedImagesCount = images.filter((uri) => uri !== "").length;
 
-    if (uploadedImagesCount < 5) {
-      alert("Upload 5 photos to continue.");
-      return;
-    }
-
-    const uploadImages = await addImages();
+    // if (uploadedImagesCount < 5) {
+    //   alert("Upload 5 photos to continue.");
+    //   return;
+    // }
+    await uploadImages();
   }
 
   return (
@@ -121,8 +142,12 @@ const Images = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Images</Text>
+          <Text>.</Text>
+          <Ionicons name="images-outline" size={55} color="black" />
         </View>
+        <Text style={styles.header}>
+          Capture 5 photos of your Cleancard Device
+        </Text>
         <View style={styles.gridContainer}>
           {images.map((imageUri: string | null, idx: number) => (
             <View key={idx} style={styles.imageBox}>
@@ -134,7 +159,7 @@ const Images = () => {
                     onPress={() => handleDelete(idx)}
                   >
                     <Text style={styles.deleteText}>
-                      <Feather name="x-circle" size={36} color="black" />
+                      <Feather name="x-circle" size={36} color="white" />
                     </Text>
                   </Pressable>
                 </View>
@@ -143,16 +168,27 @@ const Images = () => {
                   style={styles.uploadBox}
                   onPress={() => pickImage(idx)}
                 >
-                  <Text style={styles.uploadText}>Upload Image</Text>
+                  <Text style={styles.uploadText}>+</Text>
                 </Pressable>
               )}
             </View>
           ))}
         </View>
+        <View style={styles.tipContainer}>
+          <Text style={styles.tip}>Tap any square to upload a photo.</Text>
+        </View>
         <TouchableOpacity style={styles.floatingButton} onPress={handleNext}>
           <AntDesign name="arrowright" size={30} color="white" />
         </TouchableOpacity>
       </View>
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="white" />
+          <Text style={{ fontSize: 20, marginTop: 15, color: "white" }}>
+            Uploading Images...
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -162,7 +198,7 @@ export default Images;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "white",
   },
   titleContainer: {
     position: "absolute",
@@ -170,13 +206,15 @@ const styles = StyleSheet.create({
     width: "100%",
     top: 50,
     paddingHorizontal: 10,
+    display: "flex",
+    flexDirection: "row",
   },
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "white",
     padding: 20,
-    justifyContent: "space-evenly",
+    justifyContent: "center",
     width: "100%",
     height: "100%",
   },
@@ -193,9 +231,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     marginBottom: 15,
+    position: "absolute",
   },
   imageBox: {
-    width: "45%",
+    width: "30%",
     aspectRatio: 1,
     marginBottom: 15,
   },
@@ -206,6 +245,18 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    position: "absolute",
+    zIndex: 10,
+    top: 0, // Starts at the very top
+    left: 0, // Aligns to the left
+    right: 0, // Aligns to the right
+    bottom: 0,
   },
   backButton: {
     display: "flex",
@@ -218,11 +269,15 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ddd",
+    backgroundColor: "transparent",
     borderRadius: 8,
+    borderColor: "#a9a9a9",
+    borderWidth: 1.5,
+    borderStyle: "dashed",
   },
   uploadText: {
-    color: "#333",
+    color: "#a9a9a9",
+    fontSize: 50,
   },
   deleteButton: {
     position: "absolute",
@@ -248,6 +303,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingBottom: 10,
   },
+  header: {
+    position: "absolute",
+    fontWeight: "bold",
+    fontSize: 30,
+    top: "17%",
+    textAlign: "left",
+    width: "80%",
+    left: 30,
+    paddingRight: 25,
+  },
   floatingButton: {
     position: "absolute",
     bottom: 30,
@@ -263,5 +328,16 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 6,
     elevation: 5,
+  },
+  tipContainer: {
+    position: "absolute",
+    borderColor: "#d3d3d3",
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 15,
+    bottom: "22%",
+  },
+  tip: {
+    fontSize: 18,
   },
 });
