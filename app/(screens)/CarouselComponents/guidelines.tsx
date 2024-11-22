@@ -9,7 +9,6 @@ import {
 import React from "react";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
 
 const Guidelines = () => {

@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import Swiper from "react-native-swiper";
-
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { router } from "expo-router";
 const Guide = () => {
   const cameraIcon = require("../../../assets/images/cameraIcon.png");
   const tips = [
@@ -18,30 +18,38 @@ const Guide = () => {
   ];
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Swiper showsPagination={true} loop={false}>
-        <View style={styles.container}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>A Quick Guide </Text>
-          </View>
-
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              Take 5 photos of the Cleancard device.
-            </Text>
-            <Text style={styles.tip}>Tips:</Text>
-            <View style={styles.listContainer}>
-              {tips.map((tip, index) => (
-                <View key={index} style={styles.listItem}>
-                  <Text style={styles.bullet}>{index + 1})</Text>
-                  <Text style={styles.listText}>{tip}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-
-          <Image source={cameraIcon} style={styles.imageContainer} />
+      <View style={styles.container}>
+        <View style={styles.backButtonContainer}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.push("/home")}
+          >
+            <Text style={styles.buttonText}>Home</Text>
+            <MaterialIcons name="arrow-back" size={26} color="black" />
+          </TouchableOpacity>
         </View>
-      </Swiper>
+
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>A Quick Guide </Text>
+        </View>
+
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>
+            Take 5 photos of the Cleancard device.
+          </Text>
+          <Text style={styles.tip}>Tips:</Text>
+          <View style={styles.listContainer}>
+            {tips.map((tip, index) => (
+              <View key={index} style={styles.listItem}>
+                <Text style={styles.bullet}>{index + 1})</Text>
+                <Text style={styles.listText}>{tip}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <Image source={cameraIcon} style={styles.imageContainer} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -75,6 +83,21 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     width: "100%",
     top: 40,
+  },
+  backButton: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  backButtonContainer: {
+    position: "absolute",
+    width: "100%",
+    top: -5,
+  },
+  buttonText: {
+    fontSize: 15,
+    fontWeight: "bold",
   },
   imageContainer: {
     width: "100%",
@@ -139,3 +162,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+function onPress(event: GestureResponderEvent): void {
+  throw new Error("Function not implemented.");
+}
