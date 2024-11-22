@@ -73,9 +73,6 @@ export default function App() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Final Results</Text>
-        </View>
         <Text style={styles.chartTitle}>Cancer Cell Levels</Text>
 
         <LineChart
@@ -103,7 +100,6 @@ export default function App() {
           }}
           style={{
             marginVertical: 8,
-            borderRadius: 16,
           }}
         />
 
