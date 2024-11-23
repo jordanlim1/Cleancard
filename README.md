@@ -1,50 +1,37 @@
-# Welcome to your Expo app 👋
+# Welcome to Cleancard 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Where we make cancer detection as easy as a pregnancy test!
 
 ## Get started
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Install dependencies
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Start The Client
 
-## Learn more
+### You will need to download the Expo Go app on the app store or play store.
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+ npx expo start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+In the output, you'll find multiple options to open the app
 
-## Join the community
+- Scan the QR code that appears in the terminal which will show you the client.
+- Under the QR code will say something like "Metro waiting on exp://192.168.1.158:8081".
+- Please copy the numbers between :// and :8081. This is your IP address! Paste it into the .env folder where it says EXPO_PUBLIC_REACT_URL=
 
-Join our community of developers creating universal apps.
+## Start The Server
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Open a new terminal and go into the Server directory.
+
+```bash
+ cd server
+```
+
+```bash
+npm start
+```
