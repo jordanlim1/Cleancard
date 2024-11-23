@@ -7,14 +7,16 @@ import {
   Dimensions,
   ActivityIndicator,
   SafeAreaView,
+  Image,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
-export default function App() {
+export default function results() {
   const [data, setData] = useState<number[] | null>(null);
   const [mean, setMean] = useState<number | null>(null);
   const [criticalLevels, setCriticalLevels] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Add a loading state
+  const [loading, setLoading] = useState<boolean>(true);
+  const logo = require("../../assets/images/clearlogo-removebg.png");
 
   useEffect(() => {
     (async () => {
@@ -61,28 +63,23 @@ export default function App() {
     );
   }
 
-  if (!data) {
-    // Handle the case where no data is found
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>No data available to display.</Text>
-      </View>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.chartTitle}>Cancer Cell Levels</Text>
+        <View style={styles.imageContainer}>
+          <Image source={logo} style={styles.logo} />
+        </View>
+
+        <Text style={styles.chartTitle}>Cancer Cell Count</Text>
 
         <LineChart
           data={{
-            labels: data.map((_, index) =>
-              index % 2 === 0 ? `Sample ${index + 1}` : ""
-            ), // Show every 2nd label`), // Label each sample
+            labels: data!.map((_, index) =>
+              index % 2 === 0 ? `Analysis ${index + 1}` : ""
+            ),
             datasets: [
               {
-                data: data, // The cancer levels
+                data: data!,
               },
             ],
           }}
@@ -93,7 +90,7 @@ export default function App() {
           chartConfig={{
             backgroundColor: "#1c910a",
             backgroundGradientFrom: "#eff3ff",
-            backgroundGradientTo: "#4b82dd",
+            backgroundGradientTo: "#efefef",
             decimalPlaces: 2,
             color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
@@ -105,8 +102,9 @@ export default function App() {
 
         {mean !== null && criticalLevels !== null && (
           <View style={styles.summaryContainer}>
+            <Text style={styles.summaryText}>National Average: 0.45</Text>
             <Text style={styles.summaryText}>
-              Average Level: {mean.toFixed(2)}
+              Your Average: {mean.toFixed(2)}
             </Text>
             <Text style={styles.summaryText}>
               Critical Levels Detected: {criticalLevels}
@@ -114,9 +112,14 @@ export default function App() {
           </View>
         )}
 
-        <Text style={styles.text}>
-          Please contact your medical provider for more information.
-        </Text>
+        <View style={styles.banner}>
+          <Text style={styles.text}>
+            Your results are within normal limits.
+          </Text>
+          <Text style={styles.text}>
+            Please contact your primary physician if there are any concerns.
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -145,7 +148,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#f9f9f9",
-    padding: 20,
     justifyContent: "center",
     width: "100%",
     height: "100%",
@@ -165,10 +167,10 @@ const styles = StyleSheet.create({
     color: "red",
   },
   chartTitle: {
-    fontSize: 30,
-    fontWeight: "bold",
+    fontSize: 25,
     marginBottom: 20,
     color: "#000",
+    fontWeight: 500,
   },
   summaryContainer: {
     marginTop: 20,
@@ -186,8 +188,34 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   text: {
-    textAlign: "center",
-    fontSize: 15,
-    bottom: -50,
+    textAlign: "left",
+    fontSize: 20,
+    color: "white",
+    marginBottom: 10,
+  },
+  imageContainer: {
+    width: 500,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    top: 30,
+  },
+  logo: {
+    // borderColor: "red",
+    // borderWidth: 2,
+    resizeMode: "contain",
+    width: 400,
+    height: 300,
+  },
+  banner: {
+    width: "90%",
+    height: "20%",
+    position: "absolute",
+    bottom: 0,
+    backgroundColor: "#4b82dd",
+    padding: 15,
+    paddingTop: 30,
+    borderRadius: 15,
   },
 });

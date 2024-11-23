@@ -15,7 +15,7 @@ export default function RootLayout() {
 
       <Stack.Screen name="carousel" options={{ headerShown: false }} />
       <Stack.Screen name="images" options={{ headerShown: false }} />
-      <Stack.Screen name="graph" options={{ headerShown: false }} />
+      <Stack.Screen name="results" options={{ headerShown: false }} />
     </Stack>
   );
 }

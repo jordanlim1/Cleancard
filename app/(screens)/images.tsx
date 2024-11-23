@@ -27,7 +27,7 @@ const Images = () => {
 
   const suggestions = [
     "Try the next one with different lighting",
-    "Use flash for the next one",
+    "Remember to use flash",
     "Focus on the subject",
     "Ensure the device is centered",
     "Looks great!",
@@ -102,7 +102,7 @@ const Images = () => {
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
-      router.push("/graph");
+      router.push("/results");
     }
   };
 
@@ -122,11 +122,10 @@ const Images = () => {
   async function handleNext() {
     const uploadedImagesCount = images.filter((uri) => uri !== "").length;
 
-    // if (uploadedImagesCount < 5) {
-    //   alert("Upload 5 photos to continue.");
-    //   return;
-    // }
-    await uploadImages();
+    if (uploadedImagesCount < 5) {
+      alert("Upload 5 photos to continue.");
+      return;
+    } else await uploadImages();
   }
 
   return (
@@ -184,7 +183,14 @@ const Images = () => {
       {loading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="white" />
-          <Text style={{ fontSize: 20, marginTop: 15, color: "white" }}>
+          <Text
+            style={{
+              fontSize: 25,
+              marginTop: 15,
+              color: "white",
+              fontWeight: "bold",
+            }}
+          >
             Uploading Images...
           </Text>
         </View>
@@ -253,9 +259,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.4)",
     position: "absolute",
     zIndex: 10,
-    top: 0, // Starts at the very top
-    left: 0, // Aligns to the left
-    right: 0, // Aligns to the right
+    top: 0,
+    left: 0,
+    right: 0,
     bottom: 0,
   },
   backButton: {
