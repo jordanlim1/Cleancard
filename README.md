@@ -21,7 +21,7 @@ npm install
 In the output, you'll find multiple options to open the app
 
 - Scan the QR code that appears in the terminal which will open the Expo Go app.
-- Under the QR code will say something like "Metro waiting on exp://192.168.1.158:8081".
+- Under the QR code will say something like **_"Metro waiting on exp://192.168.1.158:8081" _**.
 - Please copy the numbers between exp:// and :8081 (ex. 192.168.1.158). This is your IP address! Paste it into the .env folder where it says EXPO_PUBLIC_REACT_URL=
 
 ## Start The Server
