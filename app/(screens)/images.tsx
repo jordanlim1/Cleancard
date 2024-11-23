@@ -136,7 +136,7 @@ const Images = () => {
             style={styles.backButton}
             onPress={() => router.push("/carousel")}
           >
-            <Text style={styles.buttonText}>Home</Text>
+            <Text style={styles.buttonText}>Info</Text>
             <MaterialIcons name="arrow-back" size={26} color="black" />
           </TouchableOpacity>
         </View>
